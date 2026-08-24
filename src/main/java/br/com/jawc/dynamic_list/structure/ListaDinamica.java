@@ -89,7 +89,23 @@ public class ListaDinamica {
         return removido;
     }
 
+    public Informacao removerFim() {
+        if (isEmpty()) {
+            System.out.println("Lista vazia. Nada a remover no fim.");
+            return null;
+        }
 
+        Informacao removido = fim.getInfo();
+        fim = fim.getEloa(); // O penúltimo nó passa a ser o novo fim
+
+        if (fim != null) {
+            fim.setElop(null); // Como é o novo fim, não tem ninguém depois dele
+        } else {
+            inicio = null; // A lista esvaziou
+        }
+
+        return removido;
+    }
 
     public boolean remover(Informacao info) {
         return false;

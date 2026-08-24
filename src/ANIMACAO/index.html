@@ -2,111 +2,121 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Lista Duplamente Encadeada - Animação</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Dinâmica | Simulador</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f9; }
-        .controles { margin-bottom: 30px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        input { padding: 8px; font-size: 16px; margin-right: 10px; }
-        button { padding: 8px 16px; font-size: 16px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px; margin-right: 5px;}
-        button:hover { background-color: #0056b3; }
-
-        #lista-container { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 40px; }
-
-        .no {
-            border: 2px solid #333; padding: 15px 25px; border-radius: 8px;
-            background: #e3f2fd; font-weight: bold; text-align: center;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease;
-        }
-        .no span { display: block; font-size: 12px; color: #666; margin-top: 5px; }
-
-        .ponteiro { font-size: 24px; color: #d32f2f; font-weight: bold; }
-
-        .nulo { color: #999; font-style: italic; font-size: 18px; }
+        :root { --ink: #172033; --muted: #718096; --line: #cbd5e1; --accent: #e4572e; --blue: #2364aa; --mint: #d9f5e5; }
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; padding: 32px clamp(18px, 5vw, 72px); color: var(--ink); font-family: Georgia, serif; background: radial-gradient(circle at 90% 0%, #ffe1c7 0, transparent 35%), linear-gradient(135deg, #f7f2e8, #e8f0f5); }
+        main { max-width: 1180px; margin: auto; }
+        header { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 26px; }
+        h1 { margin: 0; font-size: clamp(2rem, 5vw, 4.3rem); line-height: .95; letter-spacing: 0; }
+        header p { max-width: 330px; margin: 0; color: var(--muted); font: 15px/1.5 Arial, sans-serif; }
+        .painel { padding: 18px; border: 1px solid rgba(23,32,51,.12); background: rgba(255,255,255,.72); box-shadow: 0 18px 50px rgba(23,32,51,.09); }
+        .controles { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        input { min-width: 220px; flex: 1; padding: 12px 14px; border: 2px solid var(--line); color: var(--ink); font: 16px Arial, sans-serif; background: white; }
+        input:focus { outline: 3px solid rgba(228,87,46,.2); border-color: var(--accent); }
+        button { padding: 12px 16px; border: 0; color: white; cursor: pointer; font: 700 14px Arial, sans-serif; transition: transform .2s ease, background .2s ease, opacity .2s ease; }
+        button:hover { transform: translateY(-2px); background: #164b82; }
+        button:disabled { cursor: wait; opacity: .55; transform: none; }
+        .btn-inserir { background: var(--accent); } .btn-remover { background: var(--blue); } .btn-buscar { background: #3f7d5d; }
+        #status { min-height: 24px; margin: 16px 2px 0; color: var(--muted); font: 14px Arial, sans-serif; }
+        #status.sucesso { color: #28734d; } #status.erro { color: #b13b2b; }
+        .legenda { display: flex; gap: 18px; flex-wrap: wrap; margin: 28px 0 12px; font: 12px Arial, sans-serif; color: var(--muted); }
+        .legenda b { color: var(--accent); }
+        #lista-container { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; min-height: 210px; padding: 28px 18px; border-top: 1px solid rgba(23,32,51,.12); border-bottom: 1px solid rgba(23,32,51,.12); overflow: hidden; }
+        .no { min-width: 138px; padding: 15px 18px; border: 3px solid var(--blue); background: white; text-align: center; box-shadow: 5px 5px 0 rgba(35,100,170,.13); animation: entrar .45s both; transition: transform .35s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease; }
+        .no:hover { transform: translateY(-5px); }
+        .no.varrendo { border-color: var(--accent); background: #fff0e8; box-shadow: 0 0 0 5px rgba(228,87,46,.15); transform: translateY(-8px) scale(1.04); }
+        .no.encontrado { border-color: #3f7d5d; background: var(--mint); }
+        .no.saindo { opacity: 0; transform: scale(.7) translateY(20px); }
+        .no strong { display: block; font-size: 20px; overflow-wrap: anywhere; }
+        .no span { display: block; margin-top: 7px; color: var(--muted); font: 11px Arial, sans-serif; }
+        .ponteiro { color: var(--accent); font: 700 27px Arial, sans-serif; animation: aparecer .45s both; }
+        .nulo { color: var(--muted); font: italic 16px Arial, sans-serif; }
+        @keyframes entrar { from { opacity: 0; transform: translateX(-28px) scale(.9); } to { opacity: 1; transform: translateX(0) scale(1); } }
+        @keyframes aparecer { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
+        @media (max-width: 680px) { header { display: block; } header p { margin-top: 14px; } .controles button { flex: 1; } #lista-container { justify-content: flex-start; } }
     </style>
 </head>
 <body>
-
-<h2>Demonstração Visual: Lista Dinâmica (elop / eloa)</h2>
-
-<div class="controles">
-    <input type="text" id="nomeInput" placeholder="Digite um nome">
-    <button onclick="inserir()">Inserir Ordenado</button>
-    <button onclick="remover()">Remover</button>
-</div>
-
-<div id="lista-container">
-    <!-- A lista será renderizada aqui via JS -->
-</div>
-
+<main>
+    <header><div><p>SIMULADOR DE ESTRUTURAS</p><h1>Lista<br>Dinamica</h1></div><p>Observe os elos <strong>elop</strong> e <strong>eloa</strong> sendo percorridos e religados em cada operação.</p></header>
+    <section class="painel">
+        <div class="controles">
+            <input type="text" id="nomeInput" placeholder="Digite um nome" aria-label="Nome">
+            <button class="btn-inserir" onclick="inserir()">Inserir ordenado</button>
+            <button class="btn-remover" onclick="remover()">Remover</button>
+            <button class="btn-buscar" onclick="buscar()">Buscar</button>
+        </div>
+        <div id="status" role="status">Pronto para iniciar uma operação.</div>
+    </section>
+    <div class="legenda"><span><b>⇄</b> elop / eloa</span><span><b>laranja</b> nó visitado</span><span><b>verde</b> resultado da busca</span></div>
+    <div id="lista-container"></div>
+</main>
 <script>
-    // Nossa lista no JS para refletir a lógica do Java
     let lista = [];
+    let ocupado = false;
+    const esperar = (tempo) => new Promise(resolve => setTimeout(resolve, tempo));
+    const input = () => document.getElementById('nomeInput');
+    const status = (texto, tipo = '') => { const elemento = document.getElementById('status'); elemento.textContent = texto; elemento.className = tipo; };
+    const alternarControles = (desabilitar) => { ocupado = desabilitar; document.querySelectorAll('button').forEach(botao => botao.disabled = desabilitar); };
 
     function renderizar() {
         const container = document.getElementById('lista-container');
         container.innerHTML = '';
-
-        if (lista.length === 0) {
-            container.innerHTML = '<div class="nulo">Lista Vazia (Início = null, Fim = null)</div>';
-            return;
-        }
-
-        container.innerHTML += '<div class="nulo">null</div>'; // Indica o eloa do primeiro nó
-        container.innerHTML += '<div class="ponteiro">←</div>';
-
+        if (!lista.length) { container.innerHTML = '<div class="nulo">Lista vazia · inicio = null · fim = null</div>'; return; }
+        container.insertAdjacentHTML('beforeend', '<div class="nulo">null</div><div class="ponteiro">←</div>');
         lista.forEach((nome, index) => {
-            const noDiv = document.createElement('div');
-            noDiv.className = 'no';
-            noDiv.innerHTML = `${nome} <span>(Nó)</span>`;
-            container.appendChild(noDiv);
-
-            if (index < lista.length - 1) {
-                // Seta dupla evidenciando elop e eloa
-                const ponteiroDiv = document.createElement('div');
-                ponteiroDiv.className = 'ponteiro';
-                ponteiroDiv.innerText = '⇄';
-                container.appendChild(ponteiroDiv);
-            }
+            const no = document.createElement('div'); no.className = 'no'; no.style.animationDelay = `${index * 55}ms`;
+            no.innerHTML = `<strong>${nome}</strong><span>eloa: ${index ? lista[index - 1] : 'null'}</span><span>elop: ${index < lista.length - 1 ? lista[index + 1] : 'null'}</span>`;
+            container.appendChild(no);
+            if (index < lista.length - 1) container.insertAdjacentHTML('beforeend', '<div class="ponteiro">⇄</div>');
         });
-
-        container.innerHTML += '<div class="ponteiro">→</div>';
-        container.innerHTML += '<div class="nulo">null</div>'; // Indica o elop do último nó
+        container.insertAdjacentHTML('beforeend', '<div class="ponteiro">→</div><div class="nulo">null</div>');
     }
 
-    function inserir() {
-        const input = document.getElementById('nomeInput');
-        const nome = input.value.trim();
-        if (!nome) return;
-
-        if (lista.includes(nome)) {
-            alert(`O nome '${nome}' já existe na lista!`);
-            return;
+    async function percorrer(nome, finalidade) {
+        const nos = [...document.querySelectorAll('.no')];
+        status(`${finalidade}: inicio aponta para ${lista[0] || 'null'}...`);
+        for (let indice = 0; indice < lista.length; indice++) {
+            nos[indice].classList.add('varrendo');
+            status(`${finalidade}: comparando '${nome}' com '${lista[indice]}' (eloop ${indice + 1})`);
+            await esperar(430);
+            const comparacao = lista[indice].localeCompare(nome, 'pt-BR', { sensitivity: 'base' });
+            nos[indice].classList.remove('varrendo');
+            if (comparacao === 0) return indice;
+            if (comparacao > 0) return indice;
         }
-
-        lista.push(nome);
-        lista.sort((a, b) => a.localeCompare(b)); // Mantém ordenado
-
-        input.value = '';
-        renderizar();
+        return lista.length;
     }
 
-    function remover() {
-        const input = document.getElementById('nomeInput');
-        const nome = input.value.trim();
-        if (!nome) return;
-
-        const index = lista.indexOf(nome);
-        if (index === -1) {
-            alert(`O nome '${nome}' não foi encontrado.`);
-            return;
-        }
-
-        lista.splice(index, 1);
-        input.value = '';
-        renderizar();
+    async function inserir() {
+        const nome = input().value.trim(); if (!nome || ocupado) return;
+        alternarControles(true); renderizar(); const indice = await percorrer(nome, 'Insercao ordenada');
+        if (lista[indice] && lista[indice].localeCompare(nome, 'pt-BR', { sensitivity: 'base' }) === 0) { status(`O nome '${nome}' ja existe. Insercao ignorada.`, 'erro'); alternarControles(false); return; }
+        lista.splice(indice, 0, nome); input().value = ''; renderizar(); status(`'${nome}' inserido: eloa e elop foram religados.`, 'sucesso'); alternarControles(false);
     }
 
-    // Renderiza a lista vazia ao abrir a tela
+    async function buscar() {
+        const nome = input().value.trim(); if (!nome || ocupado) return;
+        if (!lista.length) { status('Busca interrompida: a lista esta vazia.', 'erro'); return; }
+        alternarControles(true); const indice = await percorrer(nome, 'Busca'); const no = document.querySelectorAll('.no')[indice];
+        if (no && lista[indice].localeCompare(nome, 'pt-BR', { sensitivity: 'base' }) === 0) { no.classList.add('encontrado'); status(`No '${nome}' encontrado.`, 'sucesso'); await esperar(1300); no.classList.remove('encontrado'); }
+        else status(`'${nome}' nao encontrado.`, 'erro');
+        alternarControles(false);
+    }
+
+    async function remover() {
+        const nome = input().value.trim(); if (!nome || ocupado) return;
+        if (!lista.length) { status('Remocao interrompida: a lista esta vazia.', 'erro'); return; }
+        alternarControles(true); const indice = await percorrer(nome, 'Remocao');
+        if (indice >= lista.length || lista[indice].localeCompare(nome, 'pt-BR', { sensitivity: 'base' }) !== 0) { status(`'${nome}' nao encontrado.`, 'erro'); alternarControles(false); return; }
+        const no = document.querySelectorAll('.no')[indice]; no.classList.add('saindo'); status(`Removendo '${nome}': religando eloa e elop...`); await esperar(350);
+        lista.splice(indice, 1); input().value = ''; renderizar(); status(`'${nome}' removido. Ponteiros atualizados.`, 'sucesso'); alternarControles(false);
+    }
+
+    input().addEventListener('keydown', evento => { if (evento.key === 'Enter') inserir(); });
     renderizar();
 </script>
 </body>

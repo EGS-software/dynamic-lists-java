@@ -108,7 +108,35 @@ public class ListaDinamica {
     }
 
     public boolean remover(Informacao info) {
-        return false;
+        No alvo = buscar(info);
+
+        if (alvo == null) {
+            System.out.println("Aviso: O nome '" + info.getNome() + "' não foi encontrado para remoção.");
+            return false;
+        }
+
+        // ALVO É O PRIMEIRO DA LISTA
+        if (alvo == inicio) {
+            removerInicio();
+            return true;
+        }
+
+        // ALVO ULTIMO DA LSITA
+        if (alvo == fim) {
+            removerFim();
+            return true;
+        }
+
+        // ALVO NO MEIO DA LISTA
+        No anterior = alvo.getEloa();
+        No proximo = alvo.getElop();
+
+        // Faz o anterior apontar para o próximo (pulando o alvo)
+        anterior.setElop(proximo);
+        // Faz o próximo apontar para o anterior (pulando o alvo)
+        proximo.setEloa(anterior);
+
+        return true;
     }
 
     public No buscar(Informacao info) {

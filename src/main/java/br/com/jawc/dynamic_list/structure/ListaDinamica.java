@@ -88,6 +88,17 @@ public class ListaDinamica {
     }
 
     public void exibir() {
+        if (isEmpty()) {
+            System.out.println("A lista está vazia.");
+            return;
+        }
+        No atual = inicio;
+        System.out.print("Lista (Início -> Fim): ");
+        while (atual != null) {
+            System.out.print("[" + atual.getInfo().getNome() + "] ");
+            atual = atual.getElop();
+        }
+        System.out.println();
     }
 
     public void exibirInverso() {

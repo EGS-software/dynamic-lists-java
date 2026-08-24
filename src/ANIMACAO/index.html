@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Duplamente Encadeada - Animação</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f9; }
+        .controles { margin-bottom: 30px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input { padding: 8px; font-size: 16px; margin-right: 10px; }
+        button { padding: 8px 16px; font-size: 16px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px; margin-right: 5px;}
+        button:hover { background-color: #0056b3; }
+
+        #lista-container { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 40px; }
+
+        .no {
+            border: 2px solid #333; padding: 15px 25px; border-radius: 8px;
+            background: #e3f2fd; font-weight: bold; text-align: center;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease;
+        }
+        .no span { display: block; font-size: 12px; color: #666; margin-top: 5px; }
+
+        .ponteiro { font-size: 24px; color: #d32f2f; font-weight: bold; }
+
+        .nulo { color: #999; font-style: italic; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+<h2>Demonstração Visual: Lista Dinâmica (elop / eloa)</h2>
+
+<div class="controles">
+    <input type="text" id="nomeInput" placeholder="Digite um nome">
+    <button onclick="inserir()">Inserir Ordenado</button>
+    <button onclick="remover()">Remover</button>
+</div>
+
+<div id="lista-container">
+    <!-- A lista será renderizada aqui via JS -->
+</div>
+
+<script>
+    // Nossa lista no JS para refletir a lógica do Java
+    let lista = [];
+
+    function renderizar() {
+        const container = document.getElementById('lista-container');
+        container.innerHTML = '';
+
+        if (lista.length === 0) {
+            container.innerHTML = '<div class="nulo">Lista Vazia (Início = null, Fim = null)</div>';
+            return;
+        }
+
+        container.innerHTML += '<div class="nulo">null</div>'; // Indica o eloa do primeiro nó
+        container.innerHTML += '<div class="ponteiro">←</div>';
+
+        lista.forEach((nome, index) => {
+            const noDiv = document.createElement('div');
+            noDiv.className = 'no';
+            noDiv.innerHTML = `${nome} <span>(Nó)</span>`;
+            container.appendChild(noDiv);
+
+            if (index < lista.length - 1) {
+                // Seta dupla evidenciando elop e eloa
+                const ponteiroDiv = document.createElement('div');
+                ponteiroDiv.className = 'ponteiro';
+                ponteiroDiv.innerText = '⇄';
+                container.appendChild(ponteiroDiv);
+            }
+        });
+
+        container.innerHTML += '<div class="ponteiro">→</div>';
+        container.innerHTML += '<div class="nulo">null</div>'; // Indica o elop do último nó
+    }
+
+    function inserir() {
+        const input = document.getElementById('nomeInput');
+        const nome = input.value.trim();
+        if (!nome) return;
+
+        if (lista.includes(nome)) {
+            alert(`O nome '${nome}' já existe na lista!`);
+            return;
+        }
+
+        lista.push(nome);
+        lista.sort((a, b) => a.localeCompare(b)); // Mantém ordenado
+
+        input.value = '';
+        renderizar();
+    }
+
+    function remover() {
+        const input = document.getElementById('nomeInput');
+        const nome = input.value.trim();
+        if (!nome) return;
+
+        const index = lista.indexOf(nome);
+        if (index === -1) {
+            alert(`O nome '${nome}' não foi encontrado.`);
+            return;
+        }
+
+        lista.splice(index, 1);
+        input.value = '';
+        renderizar();
+    }
+
+    // Renderiza a lista vazia ao abrir a tela
+    renderizar();
+</script>
+</body>
+</html>

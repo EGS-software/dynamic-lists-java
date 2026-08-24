@@ -84,7 +84,16 @@ public class ListaDinamica {
     }
 
     public No buscar(Informacao info) {
-        return null;
+        No atual = inicio;
+        // Percorre a lista até o fim
+        while (atual != null) {
+            // Se a comparação der 0, os nomes são exatamente iguais
+            if (atual.getInfo().compararCom(info) == 0) {
+                return atual; // Retorna a referência do nó encontrado
+            }
+            atual = atual.getElop();
+        }
+        return null; // Não encontrou
     }
 
     public void exibir() {

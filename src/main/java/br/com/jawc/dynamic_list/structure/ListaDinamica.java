@@ -72,12 +72,24 @@ public class ListaDinamica {
     }
 
     public Informacao removerInicio() {
-        return null;
+        if (isEmpty()) {
+            System.out.println("Lista vazia. Nada a remover no início.");
+            return null;
+        }
+
+        Informacao removido = inicio.getInfo();
+        inicio = inicio.getElop(); // O segundo nó passa a ser o novo início
+
+        if (inicio != null) {
+            inicio.setEloa(null); // Como é o novo início, não tem ninguém antes dele
+        } else {
+            fim = null; // Se o início ficou nulo, a lista esvaziou totalmente
+        }
+
+        return removido;
     }
 
-    public Informacao removerFim() {
-        return null;
-    }
+
 
     public boolean remover(Informacao info) {
         return false;

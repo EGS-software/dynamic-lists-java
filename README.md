@@ -4,7 +4,7 @@ Este repositório contém a implementação da atividade avaliativa sobre **Aloc
 
 **Vídeo evidenciando funcionamento do código Java e HTML:** https://youtu.be/-BomrAFp_4M?si=RplJCsbCxnA6K74i
 
-
+Trabalho desenvolvido por: **João Alfredo Williges Cunha, João Victor Benetti Filipim, João Pedro Mussi Medeiros e Mauro Pezzetta Roncata**
 
 ---
 

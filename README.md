@@ -2,25 +2,13 @@
 
 Este repositório contém a implementação da atividade avaliativa sobre **Alocação Dinâmica de Memória (Lista Duplamente Encadeada)**, solicitada na disciplina de Estruturas de Dados.
 
-## ✅ O Que Já Foi Feito
+**Vídeo evidenciando funcionamento do código Java e HTML:** https://youtu.be/-BomrAFp_4M?si=RplJCsbCxnA6K74i
 
-**1. Implementação em Java (Backend do Trabalho)**
-* Criação do esqueleto completo do projeto utilizando boas práticas de componentização e **Lombok** para reduzir a verbosidade.
-* **Classes `No` e `Informacao`:** Estruturadas para trabalhar com alocação dinâmica pura (utilizando `new`), adotando as referências `elop` (elo próximo) e `eloa` (elo anterior).
-* **Classe `ListaDinamica`:** Implementação da lógica de religação de ponteiros cobrindo todos os cenários exigidos:
-    * `inserirOrdenado(Informacao)`: Inserção alfabética contínua com tratamento de lista vazia e bloqueio de nomes duplicados.
-    * `removerInicio()`, `removerFim()` e `remover(Informacao)`.
-    * `buscar(Informacao)`.
-    * `exibir()` e `exibirInverso()` (essencial para validar a integridade do ponteiro reverso `eloa`).
-* **Classe `Main`:** Casos de teste em console estruturados para validar o funcionamento de todas as operações supracitadas.
 
-**2. Demonstração Visual (Frontend/Animação)**
-* Criação do arquivo `index.html` com uma interface construída em HTML, CSS e Vanilla JS.
-* O script reproduz a lógica de inserção ordenada, renderizando as quebras e ligações de ponteiros (representados visualmente por setas `⇄` e limites `null`) em tempo real no DOM.
 
 ---
 
-**3. Comparação entre Lista Dinâmica e Lista Matricial**
+**Comparação entre Lista Dinâmica e Lista Matricial**
 
 As duas implementações representam uma lista duplamente encadeada ordenada por nome, mas utilizam estratégias diferentes para armazenar os nós. A **Lista Dinâmica** cria cada objeto `No` com `new` quando ocorre uma inserção. Cada nó possui as referências `elop`, que aponta para o próximo nó, e `eloa`, que aponta para o nó anterior. A **Lista Matricial**, por sua vez, utiliza um vetor de capacidade fixa. Nesse vetor, as posições livres são controladas por uma **Pilha de Nós Disponíveis (PND)**.
 
@@ -64,21 +52,6 @@ Na Lista Dinâmica, depois que o nó é encontrado, a remoção no início, no f
 
 Em resumo, a Lista Matricial é interessante quando o limite de elementos é conhecido e a previsibilidade do uso de memória é prioridade. A Lista Dinâmica é mais adequada quando a estrutura precisa crescer e diminuir com frequência, evidenciando o uso de nós alocados individualmente e a recuperação automática de memória pela JVM.
 
----
-
-## ⚠️ O Que Ainda É Necessário Fazer (To-Do)
-
-Como a entrega é no início da próxima aula, o grupo deve focar nestes pontos finais para concluir a submissão no Google Classroom:
-
-
-* [ ] **Evidências de Execução (Tópico 4):** Gravar a tela demonstrando o código Java executando no console e capturar a animação HTML em funcionamento.
-* [ ] **Declaração de IA:** Redigir o documento final do grupo incluindo a declaração obrigatória sobre a utilização de Inteligência Artificial generativa, detalhando as etapas e testes realizados por nós.
-
----
-
-## 🎨 Observação Sobre a Animação Visual
-
-O arquivo `index.html` demonstra o comportamento dos ponteiros de forma interativa, com efeitos de transição e animações CSS (`transform`, `transition`). Durante as operações de inserção, remoção e busca, os nós são destacados temporariamente para evidenciar a varredura e a religação de `elop` e `eloa`.
 
 ---
 
